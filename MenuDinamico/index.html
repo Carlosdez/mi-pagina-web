@@ -415,7 +415,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo-container">
-            <img src="logo.png" alt="Logo" class="logo">
+            <img src="assets/logo.png" alt="Logo" class="logo">
             <span class="site-title">Portal de Ejercicios</span>
         </div>
         
@@ -638,18 +638,41 @@
 
             async loadExercise(page, link, pushState = true) {
                 try {
-                    // Update active menu item
+                    // Update active menu item and breadcrumb
                     this.updateActiveLink(link);
-
-                    // Update breadcrumb
                     this.currentPage.textContent = this.getPageTitle(page);
 
                     if (page === 'welcome') {
-                        // For welcome page, show welcome content
                         this.showWelcomeContent();
                     } else {
-                        // Direct navigation to exercise page
-                        window.location.href = `../${page}/index.html`;
+                        // Show loading state
+                        this.contentWrapper.innerHTML = `
+                            <div class="loading-container">
+                                <div class="spinner"></div>
+                            </div>
+                        `;
+
+                        const exercisePath = `../${page}/index.html`;
+                        
+                        // Create iframe with proper styling and error handling
+                        this.contentWrapper.innerHTML = `
+                            <div class="exercise-container">
+                                <div class="exercise-header">
+                                    <h2 class="exercise-title">${this.getPageTitle(page)}</h2>
+                                </div>
+                                <iframe 
+                                    src="${exercisePath}" 
+                                    style="width:100%; height:80vh; border:none; opacity:0; transition: opacity 0.3s"
+                                    onload="this.style.opacity=1"
+                                    onerror="this.parentNode.innerHTML='Error loading exercise'"
+                                ></iframe>
+                            </div>
+                        `;
+
+                        // Update URL if needed
+                        if (pushState) {
+                            history.pushState({ page }, '', `#${page}`);
+                        }
                     }
 
                     // Close sidebar on mobile
@@ -658,6 +681,7 @@
                         this.mainContent.classList.remove('expanded');
                     }
                 } catch (error) {
+                    console.error('Error:', error);
                     this.handleError(error);
                 }
             }
