@@ -433,7 +433,7 @@
     </nav>
 
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar active">
         <ul class="sidebar-menu">
             <li>
                 <a href="#" class="active" data-page="welcome">
@@ -506,7 +506,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content expanded">
         <div class="breadcrumb">
             <div class="breadcrumb-item">
                 <i class="fas fa-home"></i>
@@ -638,13 +638,6 @@
 
             async loadExercise(page, link, pushState = true) {
                 try {
-                    // Show loading state
-                    this.contentWrapper.innerHTML = `
-                        <div class="loading-container">
-                            <div class="spinner"></div>
-                        </div>
-                    `;
-
                     // Update active menu item
                     this.updateActiveLink(link);
 
@@ -656,8 +649,7 @@
                         this.showWelcomeContent();
                     } else {
                         // Direct navigation to exercise page
-                        const exercisePath = `./${page}.html`;
-                        window.location.href = exercisePath;
+                        window.location.href = `../${page}/index.html`;
                     }
 
                     // Close sidebar on mobile
